@@ -11,12 +11,20 @@ const AddTask = ({ addTask }) => {
     }
   };
 
+  const handleEnterText = (e) => {
+    if (e.keyCode === 13) {
+      addTask(task);
+      setTask("");
+    }
+  };
+
   return (
     <div className="add-task">
       <textarea
         value={task}
         onChange={(e) => setTask(e.target.value)}
         placeholder="Enter your task here"
+        onKeyDown={handleEnterText}
       ></textarea>
       <button onClick={handleAdd}>Add Task</button>
     </div>
