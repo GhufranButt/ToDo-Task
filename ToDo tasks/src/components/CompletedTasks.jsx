@@ -33,48 +33,41 @@
 
 import React, { useState, useEffect } from "react";
 
-const CompletedTasks = ({
-  removedItemsArray,
-  // deleteTask,
-  // deleteAllCompleted,
-}) => {
-  // console.log("opop", removedItemsArray);
-  // console.log("8888", removedItem);
-
-  useEffect(() => {
-    localStorage.setItem(
-      "removedItemsArray",
-      JSON.stringify(removedItemsArray)
-    );
-  }, [removedItemsArray]);
-
+const CompletedTasks = ({ removedItemsArray }) => {
+  // Use localStorage to store `removedItemsArray` directly with `useState`
   const [tasks, setTasks] = useState(() => {
-    let savedTasks = localStorage.getItem("removedItemsArray");
+    const savedTasks = localStorage.getItem("removedItemsArray");
     return savedTasks ? JSON.parse(savedTasks) : [];
   });
 
+  // Sync `removedItemsArray` with `tasks` in local state
+  const [localRemovedItems, setLocalRemovedItems] = useState(() => {
+    return removedItemsArray ? removedItemsArray : [];
+  });
+
+  // Update tasks and sync with localStorage whenever `removedItemsArray` changes
+  useEffect(() => {
+    setTasks(localRemovedItems);
+    localStorage.setItem(
+      "removedItemsArray",
+      JSON.stringify(localRemovedItems)
+    );
+  }, [localRemovedItems]);
+
   const deleteTask = (index) => {
-    if (tasks.length >= 0) {
+    if (tasks.length > 0) {
       const updatedTasks = tasks.filter((_, i) => i !== index);
-      console.log("nice", updatedTasks);
-      setTasks(updatedTasks); // Update the state with the new array
-      localStorage.setItem("removedItemsArray", JSON.stringify(updatedTasks)); // Store the updated tasks in localStorage
+      setTasks(updatedTasks);
+      setLocalRemovedItems(updatedTasks);
+      localStorage.setItem("removedItemsArray", JSON.stringify(updatedTasks));
     }
   };
 
   const deleteAllCompleted = () => {
     setTasks([]);
+    setLocalRemovedItems([]);
     localStorage.setItem("removedItemsArray", JSON.stringify([]));
   };
-
-  // const deleteAllCompleted = (indexToDelete) => {
-  //   const updatedTasks = tasks.filter((_, index) => index !== indexToDelete);
-  //   console.log("0-0-0-", updatedTasks);
-  //   setTasks(updatedTasks);
-  //   localStorage.setItem("removedItemsArray", JSON.stringify(updatedTasks));
-  // };
-
-  console.log("------->", tasks);
 
   return (
     <div className="completed-tasks">

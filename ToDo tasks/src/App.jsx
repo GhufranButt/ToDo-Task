@@ -139,9 +139,11 @@ const App = () => {
 
   const [activeTab, setActiveTab] = useState("add");
 
-  useEffect(() => {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-  }, [tasks]);
+  // console.log("removedItemsArray", removedItemsArray);
+
+  // useEffect(() => {
+  //   localStorage.setItem("tasks", JSON.stringify(tasks));
+  // }, [tasks]);
 
   // const addTask = (task) =>
   //   setTasks([...tasks, { text: task, completed: false }]);
